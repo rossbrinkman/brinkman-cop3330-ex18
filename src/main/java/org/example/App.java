@@ -1,6 +1,7 @@
 package org.example;
 import java.text.DecimalFormat;
 import java.util.Scanner;
+import java.lang.String;
 
 /*
  *  UCF COP3330 Fall 2021 Assignment 1 Solution
@@ -11,48 +12,52 @@ public class App
 {
     public static void main( String[] args )
     {
-        DecimalFormat f = new DecimalFormat("#0.00####");
+        DecimalFormat f = new DecimalFormat("#0.#");
         Scanner scanner = new Scanner(System.in);
-        int maleOrFemale;
-        float ouncesAlcohol, weight, hoursSinceLastDrink, alcoholDistributionRatio, bloodAlcoholContent;
-        String currentInput;
+        float temperature, converted;
+        String input;
 
-        System.out.println( "Enter a 1 if you are male or a 2 if you are female: " );
-        currentInput = scanner.nextLine();
-        try{
-            maleOrFemale = Integer.parseInt(currentInput);}
-        catch (NumberFormatException nfe){
-            System.out.println( "Input must be numeric" );
-            return;
+        System.out.println( "Press 'C' to convert from Fahrenheit to Celsius \n" +
+                "or \n" +
+                "Press 'F' to convert from Celsius to Fahrenheit " );
+        input = scanner.nextLine();
+        input = input.toUpperCase();
+
+        while(true) {
+            if (!input.equals("C") && !input.equals("F")) {
+                System.out.println("Invalid Input. Try Again:");
+                input = scanner.nextLine();
+                input = input.toUpperCase();
+            }
+            else
+                break;
         }
 
-        if(maleOrFemale == 1)
-            alcoholDistributionRatio = 0.73f;
-        else if (maleOrFemale == 2)
-            alcoholDistributionRatio = 0.66f;
-        else
-        {
-            System.out.println( "Invalid Input" );
-            return;
+        if (input.equals("C")) {
+            System.out.println( "Your Choice 'C' \n" +
+                    "Please enter the temperature in Fahrenheit: " );
+            temperature = scanner.nextFloat();
+            converted = CelsiusConversion(temperature);
+            System.out.println( "The temperature in Celsius is " + f.format(converted) + "." );
         }
-
-        System.out.println( "How many ounces of alcohol did you have? " );
-        ouncesAlcohol = scanner.nextFloat();
-
-        System.out.println( "What is your weight in pounds? " );
-        weight = scanner.nextFloat();
-
-        System.out.println( "How many hours has it been since your last drink? " );
-        hoursSinceLastDrink = scanner.nextFloat();
-
-        bloodAlcoholContent = (ouncesAlcohol * 5.14f / weight * alcoholDistributionRatio) - .015f * hoursSinceLastDrink;
-
-        System.out.println( "Your BAC is " + f.format(bloodAlcoholContent));
-
-        String endString = bloodAlcoholContent >= .08f ? "It is not legal for you to drive" : "It is legal for you to drive";
-
-        System.out.println(endString);
+        else {
+            System.out.println( "Your Choice 'F' \n" +
+                    "Please enter the temperature in Celsius: " );
+            temperature = scanner.nextFloat();
+            converted = FahrenheitConversion(temperature);
+            System.out.println( "The temperature in Fahrenheit is " + f.format(converted) + "." );
+        }
 
         scanner.close();
+    }
+
+    public static float CelsiusConversion(float temperatureInF)
+    {
+        return (temperatureInF - 32) * 5 / 9;
+    }
+
+    public static float FahrenheitConversion(float temperatureInC)
+    {
+        return (temperatureInC * 9 / 5) + 32;
     }
 }
